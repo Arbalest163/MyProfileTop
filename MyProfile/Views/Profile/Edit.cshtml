@@ -1,0 +1,17 @@
+﻿@{
+}
+<h2>Обновление профиля</h2>
+<div>
+    <form method="post" action="save">
+        Логин: <p>@ViewBag.UserLogin</p><br />
+        <input type="email" name="usermail" value="@ViewBag.Usermail" 
+               placeholder="Ваша эл-почта" class="form-control"/><br />
+        <input type="text" name="userstatus" value="@ViewBag.UserStatus" class="form-control"
+               placeholder="Ваш статус" /><br />
+        <input type="password" name="userpassword" class="form-control"
+               placeholder="Пароль" /><br />
+        <input type="file" name="userphoto" class="form-control-file" /><br />
+        <input type="submit" value="Обновить" class="btn btn-success"/>
+        <input type="reset" value="Сбросить" class="btn btn-danger" />
+    </form>
+</div>

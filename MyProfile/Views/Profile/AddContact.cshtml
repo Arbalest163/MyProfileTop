@@ -1,0 +1,25 @@
+﻿@*
+    // dynbot.ru/files/MyProfile.zip
+*@
+@{
+}
+<div class="container">
+    <form method="post" action="addcontact">
+        <div class="row">
+            <div class="col-6">
+                <select class="form-control" name="typecontact">
+                    @foreach (var types in ViewBag.Types) { 
+                        <option value="@types.Id">@types.NameType</option>
+                    }
+                </select>
+            </div>
+         
+            <div class="col-6">
+                <input type="text" class="form-control" name="contactinfo" />
+            </div>
+        </div>
+        <div>
+            <input type="submit" class="btn btn-primary" value="Добавить" />
+        </div>
+</form>
+</div>

@@ -1,0 +1,65 @@
+﻿@{
+}
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <!-- Фото пользователя -->
+            <img src="@ViewBag.User?.PhotoProfile" class="img-thumbnail" />
+            <div>
+                <a asp-controller="profile" asp-action="addcontact" title="Добаить новую ссылку"
+                   class="btn btn-sm btn-outline-info">+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-lg" viewBox="0 0 16 16">
+                <path d="m9.708 6.075-3.024.379-.108.502.595.108c.387.093.464.232.38.619l-.975 4.577c-.255 1.183.14 1.74 1.067 1.74.72 0 1.554-.332 1.933-.789l.116-.549c-.263.232-.65.325-.905.325-.363 0-.494-.255-.402-.704l1.323-6.208Zm.091-2.755a1.32 1.32 0 1 1-2.64 0 1.32 1.32 0 0 1 2.64 0Z" />
+            </svg></a>
+                <a asp-controller="profile" asp-action="addrecord" title="Добавить новую запись"
+                   class="btn btn-sm btn-outline-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-plus" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z" />
+            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z" />
+            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z" />
+        </svg></a>
+                <a asp-controller="profile" asp-action="edit" 
+                   class="btn btn-sm btn-outline-warning">Редактировать профиль</a>
+            </div>
+        </div>
+        <div class="col-9">
+            <h2>@ViewBag.User?.Username</h2>
+            <div>
+                <table class="table table-sm">
+                    @foreach (var uinfo in ViewBag.Infos) {
+                        <tr>
+                            <td>@uinfo.NameType</td>
+                            <td>@uinfo.Info</td>
+                            <td><a asp-controller="profile" asp-action="delete"
+                                   asp-route-type="info" asp-route-infoid="@uinfo.Id" class="btn btn-sm btn-close">X</a></td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <hr />
+            <div>
+                @if (ViewBag.Messages != null) { 
+                    @foreach (var message in ViewBag.Messages) {
+                        <p><b>@message.Title</b>
+                            <a asp-controller="profile" asp-action="delete"
+                            asp-route-type="message" asp-route-infoid="@message.Id" 
+                               class="btn btn-sm btn-close">X</a><br />
+                        @message.Message
+                        </p>
+                    }
+                }
+            </div>
+            <div>
+                <a asp-controller="profile" asp-action="addPicture"
+                   class="btn btn-sm btn-outline-warning">Добавить картинку на стене</a>
+            </div>
+            <div>
+                @if (ViewBag.Pictures != null)
+                {
+                    @foreach (var picture in ViewBag.Pictures)
+                    {
+                        <img src="@picture.PicturePath" class="img-thumbnail" />
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

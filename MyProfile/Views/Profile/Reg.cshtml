@@ -1,0 +1,115 @@
+﻿@{
+}<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>@ViewData["Title"]</title>
+    <meta name="theme-color" content="#7952b3">
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <!-- Custom styles for this template -->
+    <link href="form-validation.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container">
+        <main>
+            <div class="py-5 text-center">
+                <img class="d-block mx-auto mb-4" src="/docs/5.2/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+                <h2>Регистрация на MyProfile</h2>
+                <p class="lead">Мы рады, что вы решили создать свой профиль</p>
+            </div>
+
+            <div class="row g-5">
+                
+                <div class="col-md-7 col-lg-8">
+                    <div class="col-5 col-lg-5">
+                        <img src="" />
+                    </div>
+                    <h4 class="mb-3">Основные данные</h4>
+                    @if (ViewData["Error"] != null) {
+                        <div class="alert alert-danger" role="alert">
+                            @ViewData["Error"]
+                        </div>
+                    }
+                    <form class="needs-validation" method="post" action="create" enctype="multipart/form-data">
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <label for="userName" class="form-label">Имя пользователя</label>
+                                <input type="text" name="username" class="form-control" id="userName" placeholder="" value="" required>
+                                <div class="invalid-feedback">
+                                    Имя обязательно
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="password" class="form-label">Пароль</label>
+                                <input type="password" name="password" class="form-control" id="password" placeholder="" value="" required>
+                                <div class="invalid-feedback">
+                                    Пароль обязателен.
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="email" class="form-label">Эл-почта</label>
+                                <input type="email" name="email" class="form-control" id="email" placeholder="you@example.com">
+                                <div class="invalid-feedback">
+                                    Укажите верный адрес эл-почты.
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="photo" class="form-label">Фото профиля</label>
+                                <input type="file" name="photo" class="form-control" id="photo" placeholder="">
+                                <div class="invalid-feedback">
+                                    Фото профиля желательно
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="birthday" class="form-label">Дата рождения</label>
+                                <input type="date" name="birthday" class="form-control" id="birthday" placeholder="">
+                                <div class="invalid-feedback">
+                                    Укажите дату рождения
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="same-address" required>
+                            <label class="form-check-label" for="same-address">Согласен с правилами сайта</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="save-info" name="news">
+                            <label class="form-check-label" for="save-info">Присылать новости сайта</label>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <button class="w-100 btn btn-primary btn-lg" type="submit">Завершить регистрацию</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <footer class="my-5 pt-5 text-muted text-center text-small">
+            <p class="mb-1">&copy; 2017–2022 Company Name</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#">Privacy</a></li>
+                <li class="list-inline-item"><a href="#">Terms</a></li>
+                <li class="list-inline-item"><a href="#">Support</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script src="/docs/5.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+
+
+
+    <script src="form-validation.js"></script>
+</body>
+</html>

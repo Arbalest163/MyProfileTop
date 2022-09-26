@@ -1,0 +1,31 @@
+﻿@{
+}
+<div class="col-md-10 mx-auto col-lg-4 p-3">
+    <div class="p-3 border rounded bg-light">
+        <form action="auth" method="post">
+            <h1 class="h3 mb-3 fw-normal text-center">Авторизация</h1>
+            @if (ViewData["Error"] != null) { 
+                <div class="alert alert-danger" role="alert">
+                    @ViewData["Error"]
+                </div>
+            }
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" name="login" id="floatingInput" 
+                       placeholder="Логин" required>
+                <label for="floatingInput">Логин</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" name="pass" id="floatingPassword" 
+                       placeholder="Пароль" required>
+                <label for="floatingPassword">Пароль</label>
+            </div>
+            <div class="checkbox mb-3">
+                <input type="checkbox" id="invalidCheck" value="remember-me">
+                <label for="invalidCheck"> Запомнить меня</label>
+            </div>
+            <button type="submit" class="w-100 btn btn-lg btn-primary" name="signin">Войти</button>
+            <hr class="my-4">
+            <p class="text-center"><small class="text-muted"></small></p>
+        </form>
+    </div>
+</div>
