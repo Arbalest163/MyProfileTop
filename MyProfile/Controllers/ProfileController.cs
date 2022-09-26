@@ -5,53 +5,44 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
 
 namespace MyProfile.Controllers {
-    public class ProfileController : Controller {
+    public class ProfileController : Controller 
+    {
 
-        MyProfileContext db;
-        public ProfileController(MyProfileContext context) {
-            db = context;
+        private readonly MyProfileContext _dbContext;
+        public ProfileController(MyProfileContext context)
+        {
+            _dbContext = context;
         }
 
         [HttpGet]
-        public IActionResult Index() {
-            if (Startup.userId == 0) {
+        public IActionResult Index()
+        {
+            if (Startup.userId == 0)
+            {
                 return Redirect("/");
             }
 
-            User user = db.Users.FirstOrDefault(u => Startup.userId == u.Id);
-            ViewBag.User = user;
-
-            var result = from info in db.UsersInfo
-                         join nametype in db.TypesInfo on info.TypeInfo_id equals nametype.Id
+            var linkInfos = from info in _dbContext.UsersInfo
+                         join nametype in _dbContext.TypesInfo on info.TypeInfo_id equals nametype.Id
                          where Startup.userId == info.User_id
-                         select new {
+                         select new LinkInfo
+                         {
                              Id = info.Id,
                              NameType = nametype.NameType,
                              Info = info.Info
                          };
-            List<LinkInfo> infos = new List<LinkInfo>();
-            foreach(var info in result) {
-                infos.Add(new LinkInfo{
-                    Id = info.Id,
-                    NameType = info.NameType,
-                    Info = info.Info
-                });
-            }
-            ViewBag.Infos = infos;
 
-            List<Record> records = 
-                db.Records.Where(u => u.User_id == Startup.userId).
-                OrderByDescending(r => r.Id).ToList();
-            ViewBag.Messages = records;
+            var indexModel = new IndexModel
+            {
+                User = _dbContext.Users.FirstOrDefault(u => Startup.userId == u.Id),
+                linkInfos = linkInfos.ToArray(),
+                Messages = _dbContext.Records.Where(u => u.UserId == Startup.userId).OrderByDescending(r => r.Id).ToArray(),
+                Pictures = _dbContext.PicturesOnTheWall.Where(x => x.UserId == Startup.userId).ToArray()
+            };
 
-            var pictures = db.PicturesOnTheWall.Where(x => x.UserId == Startup.userId).ToArray();
-            ViewBag.Pictures = pictures;
-
-            return View();
+            return View(indexModel);
         }
 
         [HttpGet]
@@ -62,7 +53,7 @@ namespace MyProfile.Controllers {
         [HttpPost]
         public IActionResult Create([FromForm]UserDto user) {
 
-            User existsUser = db.Users.FirstOrDefault(u => user.username == u.Username);
+            User existsUser = _dbContext.Users.FirstOrDefault(u => user.username == u.Username);
             if (existsUser != null) {
                 ViewData["Error"] = "Такой логин уже занят!";
                 return View("Reg");
@@ -85,26 +76,26 @@ namespace MyProfile.Controllers {
                 PhotoProfile = photoUrl
             };
 
-            db.Users.Add(newUser);
-            db.SaveChanges();
+            _dbContext.Users.Add(newUser);
+            _dbContext.SaveChanges();
 
             return Redirect("/");
         }
 
         [HttpGet]
         public IActionResult AddContact() {
-            List<TypeInfo> Types = db.TypesInfo.ToList();
+            List<TypeInfo> Types = _dbContext.TypesInfo.ToList();
             ViewBag.Types = Types;
             return View("AddContact");
         }
         [HttpPost]
         public IActionResult AddContact(int typecontact, string contactinfo) {
-            db.UsersInfo.Add(new UserContactInfo {
+            _dbContext.UsersInfo.Add(new UserContactInfo {
                 User_id = Startup.userId,
                 TypeInfo_id = typecontact,
                 Info = contactinfo,
             });
-            db.SaveChanges();
+            _dbContext.SaveChanges();
             return Redirect("/profile");
         }
         [HttpGet]
@@ -113,7 +104,7 @@ namespace MyProfile.Controllers {
         }
         [HttpPost]
         public IActionResult Auth(string login, string pass) {
-            User user = db.Users.FirstOrDefault(n => n.Username == login);
+            User user = _dbContext.Users.FirstOrDefault(n => n.Username == login);
             if (user != null) {
                 if (user.Username == login && user.Password == pass) {
                     //авторизация верная
@@ -148,12 +139,12 @@ namespace MyProfile.Controllers {
                 fulltext = fulltext.Substring(0, 1024);
             }
 
-            db.Records.Add(new Record {
-                User_id = Startup.userId,
+            _dbContext.Records.Add(new Record {
+                UserId = Startup.userId,
                 Title = title,
                 Message = fulltext,
             });
-            db.SaveChanges();
+            _dbContext.SaveChanges();
             return Redirect("/profile");
         }
 
@@ -168,11 +159,11 @@ namespace MyProfile.Controllers {
         }
 
         private bool DeleteInfo(int id) {
-            UserContactInfo ucinfo = db.UsersInfo.
+            UserContactInfo ucinfo = _dbContext.UsersInfo.
                 FirstOrDefault(u => u.Id == id && Startup.userId == u.User_id);
             if (ucinfo != null) { 
-                db.UsersInfo.Remove(ucinfo);
-                db.SaveChanges();
+                _dbContext.UsersInfo.Remove(ucinfo);
+                _dbContext.SaveChanges();
                 return true;
             } else {
                 return false;
@@ -180,11 +171,11 @@ namespace MyProfile.Controllers {
         }
 
         private bool DeleteMessage(int id) {
-            Record rec = db.Records.
-                FirstOrDefault(u => u.Id == id && Startup.userId == u.User_id);
+            Record rec = _dbContext.Records.
+                FirstOrDefault(u => u.Id == id && Startup.userId == u.UserId);
             if (rec != null) {
-                db.Records.Remove(rec);
-                db.SaveChanges();
+                _dbContext.Records.Remove(rec);
+                _dbContext.SaveChanges();
                 return true;
             } else {
                 return false;
@@ -193,7 +184,7 @@ namespace MyProfile.Controllers {
 
         [HttpGet]
         public IActionResult Edit() {
-            User user = db.Users.FirstOrDefault(u => u.Id == Startup.userId);
+            User user = _dbContext.Users.FirstOrDefault(u => u.Id == Startup.userId);
             if (user != null) {
                 ViewBag.Usermail = user.Email;
                 ViewBag.UserLogin = user.Username;
@@ -223,8 +214,8 @@ namespace MyProfile.Controllers {
                     UserId = Startup.userId,
                     PicturePath = picturePath
                 };
-                db.PicturesOnTheWall.Add(pictureWall);
-                db.SaveChanges();
+                _dbContext.PicturesOnTheWall.Add(pictureWall);
+                _dbContext.SaveChanges();
             }
 
             return Redirect("/");

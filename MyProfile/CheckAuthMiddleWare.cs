@@ -1,10 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-
-using MyProfile.Models;
-
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MyProfile {
@@ -17,9 +12,8 @@ namespace MyProfile {
         }
 
         public async Task InvokeAsync(HttpContext context) {
-            string idUserStr;
-            context.Request.Cookies.TryGetValue("UserId", out idUserStr);
-            if (idUserStr != null) {
+            context.Request.Cookies.TryGetValue("UserId", out string idUserStr);
+            if (!string.IsNullOrEmpty(idUserStr)) {
                 Startup.userId = Convert.ToInt32(idUserStr);
                 Startup.isAuth = true;
             } else {

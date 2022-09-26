@@ -6,11 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyProfile.Models;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace MyProfile {
     public class Startup {
         public Startup(IConfiguration configuration) {
@@ -19,15 +14,13 @@ namespace MyProfile {
 
         public IConfiguration Configuration { get; }
 
-        string connection;
-        
         public static int userId;
         public static bool isAuth = false;
 
         public void ConfigureServices(IServiceCollection services) {
-            connection = Configuration.GetConnectionString("DefaultConnection");
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<MyProfileContext>(
-                options => options.UseSqlServer(connection));
+                options => options.UseSqlServer(connectionString));
             services.AddScoped<MyProfileContext>();
             services.AddControllersWithViews();
         }

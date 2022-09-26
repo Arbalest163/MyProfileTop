@@ -1,10 +1,11 @@
 ﻿@{
+    @model IndexModel
 }
 <div class="container">
     <div class="row">
         <div class="col-3">
             <!-- Фото пользователя -->
-            <img src="@ViewBag.User?.PhotoProfile" class="img-thumbnail" />
+            <img src="@Model.User?.PhotoProfile" class="img-thumbnail" />
             <div>
                 <a asp-controller="profile" asp-action="addcontact" title="Добаить новую ссылку"
                    class="btn btn-sm btn-outline-info">+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-lg" viewBox="0 0 16 16">
@@ -21,10 +22,11 @@
             </div>
         </div>
         <div class="col-9">
-            <h2>@ViewBag.User?.Username</h2>
+            <h2>@Model.User?.Username</h2>
             <div>
                 <table class="table table-sm">
-                    @foreach (var uinfo in ViewBag.Infos) {
+                    @foreach (var uinfo in Model.linkInfos)
+                    {
                         <tr>
                             <td>@uinfo.NameType</td>
                             <td>@uinfo.Info</td>
@@ -36,8 +38,10 @@
             </div>
             <hr />
             <div>
-                @if (ViewBag.Messages != null) { 
-                    @foreach (var message in ViewBag.Messages) {
+                @if (Model.Messages != null)
+                {
+                    @foreach (var message in Model.Messages)
+                    {
                         <p><b>@message.Title</b>
                             <a asp-controller="profile" asp-action="delete"
                             asp-route-type="message" asp-route-infoid="@message.Id" 
@@ -52,9 +56,9 @@
                    class="btn btn-sm btn-outline-warning">Добавить картинку на стене</a>
             </div>
             <div>
-                @if (ViewBag.Pictures != null)
+                @if (Model.Pictures != null)
                 {
-                    @foreach (var picture in ViewBag.Pictures)
+                    @foreach (var picture in Model.Pictures)
                     {
                         <img src="@picture.PicturePath" class="img-thumbnail" />
                     }
