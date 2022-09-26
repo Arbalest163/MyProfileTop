@@ -42,7 +42,7 @@ namespace MyProfile.Controllers
                 Pictures = _dbContext.PicturesOnTheWall.Where(x => x.UserId == Startup.userId).ToArray(),
             };
 
-            ViewBag.CountActiveUsers = ActiveUsers.Principals.Count();
+            CountActiveUsers();
 
             return View(indexModel);
         }
@@ -111,6 +111,7 @@ namespace MyProfile.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            CountActiveUsers();
             return View("Login");
         }
         [HttpPost]
@@ -253,6 +254,11 @@ namespace MyProfile.Controllers
             }
 
             return Redirect("/");
+        }
+
+        private void CountActiveUsers()
+        {
+            ViewBag.CountActiveUsers = ActiveUsers.Principals.Count();
         }
     }
 
