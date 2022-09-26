@@ -47,6 +47,10 @@ namespace MyProfile.Controllers {
                 db.Records.Where(u => u.User_id == Startup.userId).
                 OrderByDescending(r => r.Id).ToList();
             ViewBag.Messages = records;
+
+            var pictures = db.PicturesOnTheWall.Where(x => x.UserId == Startup.userId).ToArray();
+            ViewBag.Pictures = pictures;
+
             return View();
         }
 
@@ -202,8 +206,6 @@ namespace MyProfile.Controllers {
         [HttpGet]
         public IActionResult AddPicture()
         {
-            var pictures = db.PicturesOnTheWall.Where(x => x.UserId == Startup.userId).ToArray();
-            ViewBag.Picture = pictures;
             return View("AddPicture");
         }
         [HttpPost]
@@ -212,7 +214,8 @@ namespace MyProfile.Controllers {
             string picturePath = "images/profiles/";
             if (pictureDto != null)
             {
-                picturePath += Startup.userId + "_" + DateTime.Now.ToString() + "." + pictureDto.File.FileName.Split('.')[1];
+                var dop = ((int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds).ToString();
+                picturePath += Startup.userId + "_" + dop + "." + pictureDto.File.FileName.Split('.')[1];
                 using var fileStream = new FileStream("wwwroot/" + picturePath, FileMode.Create);
                 pictureDto.File.CopyTo(fileStream);
                 var pictureWall = new PictureOnTheWall
