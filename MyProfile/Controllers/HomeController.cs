@@ -22,6 +22,7 @@ namespace MyProfile.Controllers {
             string UserIdStr;
             HttpContext.Request.Cookies.TryGetValue("Username", out UserName);
             HttpContext.Request.Cookies.TryGetValue("UserId", out UserIdStr);
+            ViewBag.CountActiveUsers = ActiveUsers.Principals.Count();
             if (UserName != null && UserIdStr != null) {
                 return Redirect("/profile");
             }
